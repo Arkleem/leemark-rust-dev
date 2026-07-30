@@ -1,0 +1,4 @@
+#encre-css.toml
+input = ["src/**/*.rs"]
+output = "static/encre.css"
+#encrecss build -c encre-css.toml -i "*.rs" -o static/encre.css --watch

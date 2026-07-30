@@ -1,0 +1,22 @@
+[package]
+name = "amd_portfolio"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+maud = "0.26"
+axum = { version = "0.7", features = ["macros"] }
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.37.0", features = ["full"] }
+tower-http = { version = "0.6.0", features = ["fs", "trace", "compression-br"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+anyhow = "1"
+serde_json = "1"
+regex = "1.10"
+tokio-stream = "0.1"
+async-stream = "0.3"
+lettre = { version = "0.11", features = ["smtp-transport", "builder", "serde", "tokio1-native-tls"] }
+dotenvy = "0.15"
+shuttle-runtime = "0.50"
+shuttle-axum = "0.50"

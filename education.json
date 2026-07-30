@@ -1,0 +1,17 @@
+[
+  {
+    "school": "Dr. Aurelio Mendoza Memorial Colleges",
+    "degree": "Bachelor of Science in Computer Science",
+    "location": "Ipil, Zamboanga Sibugay",
+    "period": "June 2023 - April 2026",
+    "major": "Software Engineering",
+    "achievement": "With Honors",
+    "coursework": [
+      "Data Structures & Algorithms",
+      "Software Engineering",
+      "Operating Systems",
+      "Database Systems",
+      "Web & Mobile Development"
+    ]
+  }
+]

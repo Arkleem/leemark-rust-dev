@@ -1,0 +1,73 @@
+[
+  {
+  "id": 4,
+  "title": "Portfolio Website",
+  "description": "Modern portfolio built with Rust, Axum, Maud, Datastar, and encere-css. Features real-time interactivity and server-side rendering.",
+  "full_description": "A modern developer portfolio built with Rust and Datastar, showcasing projects, skills, and experience with real-time interactivity and server-side rendering for optimal performance.",
+  "images": [
+    "/static/project/1.png","/static/project/2.png",
+    "/static/project/3.png","/static/project/4.png","/static/project/5.png","/static/project/6.png"],
+  "tags": ["Rust", "Axum", "Maud", "Datastar"],
+  "github_link": "https://github.com/Arkleem/amd_portfolio",
+  "demo_link": "https://yourportfolio.com",
+  "features": [
+    "Server-side rendering with Axum and Maud",
+    "Real-time interactivity with Datastar",
+    "Project showcase with modal details",
+    "Skills and experience sections",
+    "Responsive design with encere-css"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Dashboard Analytics System",
+    "description": "Built high-concurrency, server-driven web platforms that deliver instant, real-time user interface updates using Server-Sent Events (SSE) and Datastar. Improved data accessibility and reporting efficiency.",
+    "full_description": "A real-time analytics dashboard system that processes and visualizes data streams with instant UI updates. Built with Rust, Axum, and Server-Sent Events for high-concurrency data delivery.",
+    "images": ["/static/comingsoon.png"],
+    "tags": ["Rust", "Axum", "SSE", "Datastar"],
+    "github_link": "https://github.com/yourusername/dashboard-analytics",
+    "demo_link": "https://demo.dashboard.com",
+    "features": [
+      "Real-time data streaming via SSE",
+      "Interactive charts and visualizations",
+      "Customizable dashboard layouts",
+      "Data filtering and aggregation",
+      "Export reports to CSV/PDF"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Task Management App",
+    "description": "Full-featured task management application with real-time updates, team collaboration features, and a modern server-rendered UI built with Axum, Maud, and Datastar.",
+    "full_description": "A collaborative task management platform with real-time updates, team workspaces, and intuitive task tracking. Built with a modern server-rendered architecture using Axum, Maud, and Datastar.",
+    "images": ["/static/comingsoon.png"],
+    "tags": ["Rust", "Axum", "Maud", "SurrealDB"],
+    "github_link": "https://github.com/yourusername/task-mgmt",
+    "demo_link": "https://demo.tasks.com",
+    "features": [
+      "Task creation, assignment, and tracking",
+      "Real-time updates with Datastar",
+      "Team collaboration and workspaces",
+      "Due date reminders and notifications",
+      "Progress tracking and reporting"
+    ]
+  },
+  {
+    "id": 1,
+    "title": "PCRT Record Management System",
+    "description": "Collaborated with security analysts and network teams to design full-stack data tools. Developed high-performance technical dashboards leveraging Rust to track cybercrime response workflows.",
+    "full_description": "A comprehensive record management system built for the Zamboanga Sibugay Provincial Cyber Response Team. The system streamlines cybercrime case management, evidence tracking, and incident response workflows with role-based access control for Admin, Investigator, and Viewer roles.",
+    "images": ["/static/comingsoon.png"],
+    "tags": ["Rust", "Axum", "SurrealDB", "Maud"],
+    "github_link": "https://github.com/yourusername/pcrt-system",
+    "demo_link": null,
+    "features": [
+      "Case management with full CRUD operations",
+      "Evidence tracking and chain of custody",
+      "Role-based access control (Admin, Investigator, Viewer)",
+      "Real-time dashboard with analytics",
+      "Search and filter functionality",
+      "Audit logging for all actions"
+    ]
+  }
+]

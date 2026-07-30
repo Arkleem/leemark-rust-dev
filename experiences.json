@@ -1,0 +1,8 @@
+[
+  {
+    "company": "Zamboanga Sibugay Provincial Cyber Response Team",
+    "role": "Software Developer Intern",
+    "period": "December 2025 - February 2026",
+    "description": "• Built a real-time operational dashboard using Rust, Axum, and SurrealDB\n                    • Optimized database queries and record retrieval workflows, improving dashboard response times for internal operations\n                    • Implemented role-based access control supporting 3 user levels: Admin, Investigator, and Viewer"
+  }
+]

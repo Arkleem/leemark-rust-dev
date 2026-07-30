@@ -1,0 +1,8 @@
+
+# Rust
+target/
+Cargo.lock
+
+# Environment (contains password!)
+.env
+*.env
