@@ -20,10 +20,6 @@ async fn main() -> anyhow::Result<()> {
     dotenvy::dotenv().ok();
 
     // Debug: Check if password is loaded
-    match std::env::var("GMAIL_APP_PASSWORD") {
-        Ok(pwd) => println!("✅ Password loaded: {} characters", pwd.len()),
-        Err(e) => println!("⚠️ Password not loaded: {}", e),
-    }
 
     tracing_subscriber::fmt::init();
 

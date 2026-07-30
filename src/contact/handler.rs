@@ -1,9 +1,7 @@
+// src/contact/handler.rs
 use axum::{extract::Form, response::Html, response::IntoResponse};
 use std::collections::HashMap;
-use lettre::{
-    message::Mailbox, transport::smtp::authentication::Credentials, SmtpTransport,
-    Transport, Message,
-};
+use reqwest::Client;
 
 pub async fn submit_contact_form(Form(form): Form<HashMap<String, String>>) -> impl IntoResponse {
     let name = form.get("name").unwrap_or(&"".to_string()).to_string();
@@ -12,30 +10,79 @@ pub async fn submit_contact_form(Form(form): Form<HashMap<String, String>>) -> i
 
     // Validate
     if name.is_empty() || email.is_empty() || message.is_empty() {
-        return Html(render_popup("❌", "Error!", "Please fill in all fields.", "#fff5f5", "#fcc", "#c00"));
+        return Html(render_popup("Error!", "Please fill in all fields.", "#fff5f5", "#fcc", "#c00"));
     }
 
     if message.len() > 500 {
-        return Html(render_popup("❌", "Error!", "Message is too long (max 500 characters).", "#fff5f5", "#fcc", "#c00"));
+        return Html(render_popup("Error!", "Message is too long (max 500 characters).", "#fff5f5", "#fcc", "#c00"));
     }
 
-    // Get password from environment
-    let password = match std::env::var("GMAIL_APP_PASSWORD") {
-        Ok(pwd) => pwd.replace(" ", ""),
+    // Get Resend API key from environment
+    let api_key = match std::env::var("RESEND_API_KEY") {
+        Ok(key) => key,
         Err(e) => {
-            eprintln!("❌ GMAIL_APP_PASSWORD not set: {}", e);
-            return Html(render_popup("❌", "Error!", "Server configuration error. Please try again later.", "#fff5f5", "#fcc", "#c00"));
+            eprintln!("❌ RESEND_API_KEY not set: {}", e);
+            return Html(render_popup("Error!", "Server configuration error. Please try again later.", "#fff5f5", "#fcc", "#c00"));
         }
     };
 
-    // Send email
-    match send_email(&name, &email, &message, &password) {
-        Ok(_) => Html(render_popup("✅", "Message Sent!", "Thank you for reaching out! I'll get back to you soon.", "#f0faf0", "#b3ffb3", "#2d7a2d")),
-        Err(e) => Html(render_popup("❌", "Error!", &format!("Failed to send: {}", e), "#fff5f5", "#fcc", "#c00")),
+    // Send email via Resend
+    match send_email_via_resend(&name, &email, &message, &api_key).await {
+        Ok(_) => Html(render_popup("Message Sent!", "Thank you for reaching out! I'll get back to you soon.", "#f0faf0", "#b3ffb3", "#2d7a2d")),
+        Err(e) => {
+            eprintln!("❌ Failed to send email: {}", e);
+            Html(render_popup("Error!", &format!("Failed to send: {}", e), "#fff5f5", "#fcc", "#c00"))
+        }
     }
 }
 
-fn render_popup(_icon: &str, title: &str, message: &str, bg_color: &str, border_color: &str, text_color: &str) -> String {
+async fn send_email_via_resend(name: &str, email: &str, message: &str, api_key: &str) -> Result<(), String> {
+    let client = Client::new();
+
+    // Resend default sandbox email (or use your verified domain)
+    // For production, verify a domain at: https://resend.com/domains
+    let from_email = "onboarding@resend.dev"; // Default sandbox
+    // When you verify a domain, change to: "portfolio@yourdomain.com"
+
+    let response = client
+        .post("https://api.resend.com/emails")
+        .header("Authorization", format!("Bearer {}", api_key))
+        .header("Content-Type", "application/json")
+        .json(&serde_json::json!({
+            "from": from_email,
+            "to": ["leemarkarojo7@gmail.com"],
+            "reply_to": email,
+            "subject": format!("[Portfolio] New message from {}", name),
+            "text": format!(
+                "New contact form submission from your portfolio website:\n\n\
+                Name: {}\n\
+                Email: {}\n\n\
+                Message:\n{}",
+                name, email, message
+            ),
+            "html": format!(
+                "<h2>New Contact Form Submission</h2>\
+                <p><strong>Name:</strong> {}</p>\
+                <p><strong>Email:</strong> {}</p>\
+                <p><strong>Message:</strong></p>\
+                <p>{}</p>",
+                name, email, message.replace("\n", "<br>")
+            )
+        }))
+        .send()
+        .await
+        .map_err(|e| format!("Network error: {}", e))?;
+
+    if response.status().is_success() {
+        println!("✅ Email sent via Resend from {} to {}", email, "leemarkarojo7@gmail.com");
+        Ok(())
+    } else {
+        let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        Err(format!("Resend API error: {}", error_text))
+    }
+}
+
+fn render_popup(title: &str, message: &str, bg_color: &str, border_color: &str, text_color: &str) -> String {
     format!(
         r#"
         <div style="
@@ -106,54 +153,4 @@ fn render_popup(_icon: &str, title: &str, message: &str, bg_color: &str, border_
         "#,
         bg_color, border_color, text_color, title, text_color, message
     )
-}
-
-fn send_email(name: &str, email: &str, message: &str, password: &str) -> Result<(), String> {
-    let smtp_username = "leemarkarojo7@gmail.com";
-
-    // Parse email addresses
-    let to = smtp_username.parse::<Mailbox>()
-        .map_err(|e| format!("Invalid to email: {}", e))?;
-
-    // 'from' must be your authenticated Gmail account to prevent SMTP 535 rejection
-    let from = format!("Portfolio Contact <{}>", smtp_username).parse::<Mailbox>()
-        .map_err(|e| format!("Invalid from email: {}", e))?;
-
-    let reply_to = email.parse::<Mailbox>()
-        .map_err(|e| format!("Invalid reply-to email: {}", e))?;
-
-    let email_body = format!(
-        "New contact form submission from your portfolio website:\n\n\
-        Name: {}\n\
-        Email: {}\n\
-        \n\
-        Message:\n{}",
-        name, email, message
-    );
-
-    let email_msg = Message::builder()
-        .from(from)
-        .to(to)
-        .reply_to(reply_to)
-        .subject(format!("New message from {} via Portfolio", name))
-        .body(email_body)
-        .map_err(|e| format!("Failed to build email: {}", e))?;
-
-    let creds = Credentials::new(smtp_username.to_string(), password.to_string());
-
-    let mailer = SmtpTransport::relay("smtp.gmail.com")
-        .map_err(|e| format!("Failed to connect to SMTP: {}", e))?
-        .credentials(creds)
-        .build();
-
-    match mailer.send(&email_msg) {
-        Ok(_) => {
-            println!("✅ Email sent successfully from {} to {}", email, smtp_username);
-            Ok(())
-        }
-        Err(e) => {
-            eprintln!("❌ Failed to send email: {}", e);
-            Err(format!("Failed to send: {}", e))
-        }
-    }
 }

@@ -5,7 +5,6 @@ use axum::{
     response::{Html, IntoResponse, Json, sse::{Event, Sse}},
     routing::{get, post},
     Router,
-    Json as AxumJson,
 };
 use std::collections::HashMap;
 use std::convert::Infallible;
@@ -20,138 +19,11 @@ use maud::html;
 
 use crate::state::AppState;
 use crate::home::view::home_page;
-use crate::models::ContactForm;
 use crate::contact::handler::submit_contact_form;
 
 /// Home page handler
 pub async fn get_home(State(state): State<Arc<AppState>>) -> impl IntoResponse {
     Html(home_page(&state).into_string())
-}
-
-/// Contact form handler - accepts JSON only
-pub async fn submit_contact(
-    State(_state): State<Arc<AppState>>,
-    AxumJson(form): AxumJson<ContactForm>,
-) -> impl IntoResponse {
-    println!("📧 Contact form submission (JSON):");
-    println!("  Name: {}", form.name);
-    println!("  Email: {}", form.email);
-    println!("  Message: {}", form.message);
-
-    // Validate form
-    if form.name.is_empty() || form.email.is_empty() || form.message.is_empty() {
-        let response = serde_json::json!({
-            "success": false,
-            "message": "All fields are required."
-        });
-        return Json(response);
-    }
-
-    if form.message.len() > 500 {
-        let response = serde_json::json!({
-            "success": false,
-            "message": "Message is too long (max 500 characters)."
-        });
-        return Json(response);
-    }
-
-    // Get password from environment
-    let password = match std::env::var("GMAIL_APP_PASSWORD") {
-        Ok(pwd) => pwd.replace(" ", ""),
-        Err(e) => {
-            eprintln!("❌ GMAIL_APP_PASSWORD not set: {}", e);
-            let response = serde_json::json!({
-                "success": false,
-                "message": "Server configuration error. Please try again later."
-            });
-            return Json(response);
-        }
-    };
-    match std::env::var("GMAIL_APP_PASSWORD") {
-        Ok(pwd) => println!("✅ Password loaded: {} characters", pwd.len()),
-        Err(_) => println!("❌ Password NOT loaded"),
-    }
-
-    // Send email (sync version)
-    match send_email(&form.name, &form.email, &form.message, &password) {
-        Ok(_) => {
-            let response = serde_json::json!({
-                "success": true,
-                "message": format!("Thank you {}! Your message has been sent successfully.", form.name)
-            });
-            Json(response)
-        }
-        Err(e) => {
-            eprintln!("❌ Failed to send email: {}", e);
-            let response = serde_json::json!({
-                "success": false,
-                "message": format!("Failed to send message: {}", e)
-            });
-            Json(response)
-        }
-    }
-}
-
-/// Send email using Gmail SMTP (SYNC version - no async)
-fn send_email(name: &str, email: &str, message: &str, password: &str) -> Result<(), String> {
-    use lettre::{
-        message::Mailbox,
-        transport::smtp::authentication::Credentials,
-        SmtpTransport,
-        Transport,
-        Message,
-    };
-
-    let smtp_username = "leemarkarojo7@gmail.com";
-
-    // Parse email addresses
-    let to = "leemarkarojo7@gmail.com".parse::<Mailbox>()
-        .map_err(|e| format!("Invalid to email: {}", e))?;
-
-    let from = format!("Portfolio Contact <{}>", smtp_username).parse::<Mailbox>()
-        .map_err(|e| format!("Invalid from email: {}", e))?;
-
-    // Build email body
-    let email_body = format!(
-        "New contact form submission from your portfolio website:\n\n\
-        ──────────────────────────────\n\
-        📝 Name: {}\n\
-        📧 Email: {}\n\
-        ──────────────────────────────\n\n\
-        📨 Message:\n{}\n\n\
-        ──────────────────────────────\n\
-        Sent from: {}",
-        name, email, message, email
-    );
-
-    let email_msg = Message::builder()
-        .from(from)
-        .to(to)
-        .reply_to(email.parse().map_err(|e| format!("Invalid reply-to email: {}", e))?)
-        .subject(format!("[Portfolio] New message from {} ({})", name, email))
-        .body(email_body)
-        .map_err(|e| format!("Failed to build email: {}", e))?;
-
-    // Create SMTP credentials
-    let creds = Credentials::new(smtp_username.to_string(), password.to_string());
-
-    // Create SMTP transport
-    let mailer = SmtpTransport::relay("smtp.gmail.com")
-        .map_err(|e| format!("SMTP connection failed: {}", e))?
-        .credentials(creds)
-        .build();
-
-    // Send email (sync)
-    match mailer.send(&email_msg) {
-        Ok(_) => {
-            println!("✅ Email sent successfully from {} to {}", email, "leemarkarojo7@gmail.com");
-            Ok(())
-        }
-        Err(e) => {
-            eprintln!("❌ Failed to send email: {}", e);
-            Err(format!("Failed to send email: {}", e))
-        }
-    }
 }
 
 /// Scroll Progress Handler
@@ -278,7 +150,7 @@ pub fn create_router(state: Arc<AppState>) -> Router {
 /// Start the server
 pub async fn start_server(router: Router) -> anyhow::Result<()> {
     let listener = TcpListener::bind("0.0.0.0:3000").await?;
-    println!("🚀 Server running on http://localhost:3000");
+    println!("🚀 Server running on http://0.0.0.0:3000");
     axum::serve(listener, router).await?;
     Ok(())
 }
