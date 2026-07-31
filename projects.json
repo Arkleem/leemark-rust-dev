@@ -9,7 +9,7 @@
     "/static/project/3.png","/static/project/4.png","/static/project/5.png","/static/project/6.png"],
   "tags": ["Rust", "Axum", "Maud", "Datastar"],
   "github_link": "https://github.com/Arkleem/leemark-rust-dev",
-  "demo_link": "https://yourportfolio.com",
+  "demo_link": "https://leemark-rust-dev.onrender.com",
   "features": [
     "Server-side rendering with Axum and Maud",
     "Real-time interactivity with Datastar",
@@ -25,8 +25,8 @@
     "full_description": "A real-time analytics dashboard system that processes and visualizes data streams with instant UI updates. Built with Rust, Axum, and Server-Sent Events for high-concurrency data delivery.",
     "images": ["/static/comingsoon.png"],
     "tags": ["Rust", "Axum", "SSE", "Datastar"],
-    "github_link": "https://github.com/yourusername/dashboard-analytics",
-    "demo_link": "https://demo.dashboard.com",
+    "github_link": null,
+    "demo_link": null,
     "features": [
       "Real-time data streaming via SSE",
       "Interactive charts and visualizations",
@@ -42,8 +42,8 @@
     "full_description": "A collaborative task management platform with real-time updates, team workspaces, and intuitive task tracking. Built with a modern server-rendered architecture using Axum, Maud, and Datastar.",
     "images": ["/static/comingsoon.png"],
     "tags": ["Rust", "Axum", "Maud", "SurrealDB"],
-    "github_link": "https://github.com/yourusername/task-mgmt",
-    "demo_link": "https://demo.tasks.com",
+    "github_link": null,
+    "demo_link": null,
     "features": [
       "Task creation, assignment, and tracking",
       "Real-time updates with Datastar",
@@ -59,7 +59,7 @@
     "full_description": "A comprehensive record management system built for the Zamboanga Sibugay Provincial Cyber Response Team. The system streamlines cybercrime case management, evidence tracking, and incident response workflows with role-based access control for Admin, Investigator, and Viewer roles.",
     "images": ["/static/comingsoon.png"],
     "tags": ["Rust", "Axum", "SurrealDB", "Maud"],
-    "github_link": "https://github.com/yourusername/pcrt-system",
+    "github_link": null,
     "demo_link": null,
     "features": [
       "Case management with full CRUD operations",
