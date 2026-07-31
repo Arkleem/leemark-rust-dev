@@ -8,7 +8,7 @@
     "/static/project/1.png","/static/project/2.png",
     "/static/project/3.png","/static/project/4.png","/static/project/5.png","/static/project/6.png"],
   "tags": ["Rust", "Axum", "Maud", "Datastar"],
-  "github_link": "https://github.com/Arkleem/amd_portfolio",
+  "github_link": "https://github.com/Arkleem/leemark-rust-dev",
   "demo_link": "https://yourportfolio.com",
   "features": [
     "Server-side rendering with Axum and Maud",
