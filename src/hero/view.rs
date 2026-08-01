@@ -38,7 +38,7 @@ pub fn hero_section() -> Markup {
 
                         // Heading
                         h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-relaxed" style="color: #1a1a1a; font-family: 'Press Start 2P', monospace;" {
-                            "Hi, I'm "
+                            "Hi,I'm "
                             span style="background: linear-gradient(to right, #d4af37, #b8960f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" { "Leemark" }
                         }
 
