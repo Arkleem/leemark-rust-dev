@@ -45,7 +45,7 @@ pub fn hero_section() -> Markup {
                         // Subtitle
                         div class="flex items-center gap-3 mb-3 justify-center lg:justify-start" {
                             div class="w-8 sm:w-10 h-0.5 rounded-full" style="background: #d4af37;" {}
-                            p class="text-lg sm:text-xl md:text-2xl font-medium" style="color: #333333;" {
+                            p class="text-lg sm:text-xl md:text-2x2 font-medium" style="color: #333333;" {
                                 "Rust Full-Stack Developer"
                             }
                             div class="w-8 sm:w-10 h-0.5 rounded-full" style="background: #d4af37;" {}

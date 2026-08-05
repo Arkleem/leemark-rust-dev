@@ -1036,13 +1036,6 @@ button, input:where([type='button'], [type='reset'], [type='submit']), ::file-se
 }
 
 @media (width >= 48rem) {
-  .md\:text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
-  }
-}
-
-@media (width >= 48rem) {
   .md\:px-100 {
     padding-inline: 25rem;
   }
